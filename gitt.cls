@@ -12,7 +12,7 @@
 \ProcessOptions*\relax
 
 
-\LoadClass[a5paper,openright,12pt]{memoir}
+\LoadClass[a5paper,openright,10pt]{memoir}
 
 % set paper size
 \setlrmarginsandblock{2.16cm}{1.91cm}{*}
@@ -25,9 +25,17 @@
 \RequirePackage[final]{microtype}
 \RequirePackage{tikz}
 
-% Import a new font and use the sans-serif version by default
+% Use Latin Modern for the sans serif font
 \RequirePackage{lmodern}
-\renewcommand{\familydefault}{\sfdefault}
+
+% Use Palatino for the serif font
+\RequirePackage[osf,sc]{mathpazo}
+
+% microtype makes justified text look nicer by allowing punctuation and some
+% letters to hang slightly into the margin
+\RequirePackage{microtype}
+
+%\renewcommand{\familydefault}{\sfdefault}
 
 % Put chapters and sections in the toc, only number the chapter
 \setcounter{tocdepth}{3}
@@ -40,7 +48,10 @@
 \renewcommand{\thetable}{}
 
 % Print just the chapter name without 'Chapter #.' in the running heads
-\renewcommand\chaptermark[1]{\markboth{\memUChead{#1}}{}}%
+\RequirePackage{textcase}
+\newcommand{\runninghead}[1]{\textsc{\MakeTextLowercase{#1}}}
+\renewcommand{\chaptermark}[1]{\markboth{\runninghead{#1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\runninghead{#1}}}
 
 % Make the pdf have clickable links
 \RequirePackage[
@@ -64,10 +75,17 @@
 }
 
 % give us a begin{trenches}
-\newenvironment{trenches}{\begin{quote}\begin{rmfamily}\textbf{In the trenches\ldots\\\\}}{\end{rmfamily}\end{quote}}
+\newenvironment{trenches}{%
+  \begin{quote}%
+    \begin{sffamily}%
+      \textbf{In the trenches\ldots}\par
+}{%
+    \end{sffamily}%
+  \end{quote}%
+}
 
 % Set the default formatting options for the Verbatim environment
-\fvset{frame=leftline,framerule=1mm,fontsize=\relsize{-3}}
+\fvset{frame=leftline,framerule=1mm,fontsize=\footnotesize}
 
 % Callout boxes
 \newsavebox{\callout@contents}
