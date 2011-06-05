@@ -21,7 +21,8 @@
 
 % Import packages
 \RequirePackage{graphicx}
-\RequirePackage{color,fancyvrb,relsize}
+\RequirePackage[usenames,dvipsnames,svgnames]{xcolor}
+\RequirePackage{fancyvrb,relsize}
 \RequirePackage[final]{microtype}
 \RequirePackage{tikz}
 
@@ -54,7 +55,8 @@
 \renewcommand{\sectionmark}[1]{\markright{\runninghead{#1}}}
 
 % Make the pdf have clickable links
-\RequirePackage[
+\RequirePackage{hyperref}
+\hypersetup{%
   bookmarks,
   bookmarksopen,
   bookmarksnumbered=false,
@@ -66,10 +68,16 @@
   pagecolor=black,
   plainpages=false,
   pdfpagelabels,
-  pdftitle={Git In the Trenches},
-  pdfauthor={Peter Savage}]{hyperref}
+}
 
-\AtBeginDocument{
+\AtBeginDocument{%
+  \hypersetup{%
+    pdftitle={\thetitle},
+    pdfauthor={\theauthor},
+  }%
+}
+
+\AtBeginDocument{%
   \hyphenpenalty=1000
   \tolerance=1000
 }
@@ -92,7 +100,7 @@
 }
 
 % Set the default formatting options for the Verbatim environment
-\fvset{frame=leftline,framerule=1mm,fontsize=\footnotesize}
+\fvset{frame=leftline,rulecolor=\color{gray},framerule=1mm,fontsize=\footnotesize}
 
 % Callout boxes
 \newsavebox{\callout@contents}
