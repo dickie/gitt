@@ -25,7 +25,9 @@
 
 % Import packages
 \RequirePackage{graphicx}
-\RequirePackage[usenames,dvipsnames,svgnames]{xcolor}
+\RequirePackage{eso-pic}
+\PassOptionsToPackage{usenames,dvipsnames,svgnames}{xcolor}
+%\RequirePackage[usenames,dvipsnames,svgnames]{xcolor}
 \RequirePackage{fancyvrb,relsize}
 \RequirePackage[final]{microtype}
 \RequirePackage{tikz}
@@ -162,5 +164,16 @@
 % Indicates thought breaks
 \newcommand{\thoughtbreak}{%
   \par\begin{center}*\quad*\quad*\end{center}\par
+}
+
+% Inserts a full-page graphic.
+\newcommand{\coverpage}[1]{%
+  \thispagestyle{empty}%
+  \IfFileExists{#1}{%
+    \AddToShipoutPicture*{\put(0,0){\includegraphics[width=\paperwidth,height=\paperheight]{#1}}}%
+  }{%
+    \ClassWarningNoLine{gitt}{Missing cover page graphic:\MessageBreak #1}%
+  }%
+  \null\clearpage%
 }
 
