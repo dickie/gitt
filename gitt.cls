@@ -172,6 +172,6 @@
   }{%
     \ClassWarningNoLine{gitt}{Missing cover page graphic:\MessageBreak #1}%
   }%
-  \null\clearpage%
+  \null\cleardoublepage%
 }
 
