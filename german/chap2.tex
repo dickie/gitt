@@ -76,7 +76,7 @@ Nehmen wir uns ein paar Minuten Zeit um dar"uber zu reden, wie Git intern funkti
 
 Wenn ein Commit im Repository gemacht wird, speichert Git einige Dinge: Ein Commit Object wird erstellt, welches Informationen dar"uber enth"alt, wer den Commit gemacht hat, den Ursprung des Commits und ein Tree Object. Das Tree Object beschreibt, wie das Repository zum Zeitpunkt des Commits ausgesehen hat. In anderen Worten: Der Tree Object teilt Git mit, welche Dateien im Repository enthalten waren. Zu guter Letzt speichert Git die Files die im Repository waren mit dem Namen ihres SHA-1 Hashes im objects-Ordner. Nat"urlich ist Git an dieser Stelle sehr clever, denn, wenn man die gleiche Datei in mehreren Commits "andert, ver"andert sich dennoch nicht der SHA-1 Hash und deswegen speichert Git nur eine Kopie der Datei; um Platz zu sparen. 
 
-Das Commit Object ist ebenfalls durch einen SHA-1 Hash gekennzeichnet. Hierbei unterscheidet sich Git zu vielen anderen VCS, die entweder eine Numer benutzen, oder eine Versionsnummer in der Datei selbst. Sich an 40-stellige SHA-1 Hashes zu gew"ohnen kann etwas dauern. Zu sagen "Ich brauche den Commit mit dem Hash bf81617d6417d93380e06785f8ed23b247bea8f6d" ist wahrscheinlich nicht so einfach wie schlichtweg zu sagen, dass man Version 6 ben"otigt. Trotzdem kann Git sehr gut mit den hashes umgehen und man kann sich auf einen bestimmten Commit beziehen, indem man ein paar der Zeichen vom Anfang des Hashes nennt, solange sich diese Zeichen eindeutig auf einen Commit beziehen.
+Das Commit Object ist ebenfalls durch einen SHA-1 Hash gekennzeichnet. Hierbei unterscheidet sich Git zu vielen anderen VCS, die entweder eine Numer benutzen, oder eine Versionsnummer in der Datei selbst. Sich an 40-stellige SHA-1 Hashes zu gew"ohnen kann etwas dauern. Zu sagen << Ich brauche den Commit mit dem Hash bf81617d6417d93380e06785f8ed23b247bea8f6d >> ist wahrscheinlich nicht so einfach wie schlichtweg zu sagen, dass man Version 6 ben"otigt. Trotzdem kann Git sehr gut mit den hashes umgehen und man kann sich auf einen bestimmten Commit beziehen, indem man ein paar der Zeichen vom Anfang des Hashes nennt, solange sich diese Zeichen eindeutig auf einen Commit beziehen.
 
 \section{Day 2 - ``Erzeugen von Commits''}
 \subsection{Lasst uns ein Repository erstellen!}
@@ -311,53 +311,52 @@ k"onnen.''
 Jeder nickte zustimmend.
 \end{trenches}
 
-\begin{callout}{Knowledge}{How do we change the commit message editor?}
-We spoke earlier about the configuration file and how it stores information about our Git instance.  Git can use any text editor you require, even a graphical one, though the need rarely arises.  As mentioned earlier, Git has a preference lever when talking about configuration.  First and foremost it will look in the repositories own 'config' file in the .git folder.  Then, it will look in the users \texttt{\textasciitilde/.gitconfig} file.  Finally, Git will look in your distributions own global folder.  
+\begin{callout}{Knowledge}{Wie man den Editor f"ur die Commit-Messages "andert} Wir haben vorhin schon kurz "uber die Konfigurations-Datei gesprochen und dar"uber, wie sie die Informationen "uber unsere Git-Instanz speichert. Git kann jeden Texteditor benutzen, den man sich w"unschen kann, sogar einen grafischen, obwohl daf"ur kaum Bedarf besteht. Wir bereits erw"ahnt, hat Git mehrere Ebenen was die Konfigurations-Dateien betrifft. Zuerst wird die eigene Konfigurations-Datei im .git-Ordnerdes Repositories betrachtet, danach in der \texttt{\textasciitilde/.gitconfig}-Datei im Home-Verzeichnis des Users und zu guter letzt im globalen Ordner der verwendeten Distribution.
 
-If we wanted to change the editor that Git would use to modify commit messages, we can either modify the files directly, or run a command similar to the following;
+Wenn man den Editor zum Verfassen von Commit-Messages wechseln m"ochte kann man entweder diese Datein direkt ver"andern, oder ein Kommando wie folgendes benutzen:
 
 \begin{Verbatim}
 git config core.editor "nano"
 \end{Verbatim}
 
-If we want the changes to apply globally, meaning it would affect all repositories we administrate as this user, unless overridden by a repository setting, we would run the following;
+Wenn wir Dinge global ver"andern wollen (also f"ur alle Repositories des Users), w"urden wir folgendes Kommando ausf"uhren:
 
 \begin{Verbatim}
 git config --global core.editor "nano"
 \end{Verbatim}
 
-It is worth noting that you can also use the \$EDITOR environment variable to accomplish the same thing.  Many people use this in preference to the modifying the Git configuration simply because many other programs honour this setting.
+Man kann auch die \$EDITOR -Variable des Environments ver"andern. Allerdings w"urden dann auch andere Programme als nur Git den eingestellten Editor verwenden, was unter Umst"anden nicht erw"unscht ist.
 \end{callout}
 
-Now we know how to add files into the repository.  The question is, what do we do if we need to remove a file, or even rename it.  Well, git has some commands to help with that.  \texttt{git rm} and \texttt{git mv} delete and move files respectively.  Usually when you want to remove files from the repository, or move them, this is how you will handle it, but what if you have already deleted a tracked file manually?  Well, you have two options.  You could run \texttt{git commit -a}, but remember this will commit all changes to tracked files.  You could also run a \texttt{git rm <filename>} with the name of the file you have just deleted.  Git will then push that change into the staging area ready for commit.  The same applies to moving a file
+Wir wissen nun, wie man ein File zu einem Repository hinzuf"ugt. Die Frage ist aber, was zu tun ist, wenn man eine Datei l"oschen oder umbenennen will. Auch daf"ur gibt es bei Git Kommandos: \texttt{git rm} und \texttt{git mv} l"oschen beziehungsweise bennenen Dateien um. Das w"are also der Weg wie man normalerweise derartige Operationen durchf"uhren w"urde, aber was ist, wenn man die betreffende Datei bereits manuell gel"oscht hat? Dann hat man zwei Optionen: Man k"onnte \texttt{git commit -a} ausf"uhren, aber das w"urde ja die Changes an allen bereits erfassten Dateien erneut committen. Eine weitere M"oglichkeit w"are \texttt{git rm <filename>} mit dem Dateinamen angeh"angt aufzurufen, woraufhin Git diese Ver"anderung auch in der Staging Area durchf"uhren wird. Das Selbe gilt auch f"ur das umbennen von Dateien.
 
-However, it is worth noting something in the way that Git handles renames.  Git does not track renames explicitly.  This means that by running the \texttt{git mv <source> <dest>} command, you are essentially running a Linux \texttt{mv} command, followed by the \texttt{git rm} on the source file and \texttt{git add} on the destination file.  Running the \texttt{git mv} command is a shorthand way of doing just that.  It is worth playing with this to ensure that you understand what is happening.  As an exercise, inspect the repository after each command so that you understand at what point Git recognises your actions as a rename.
+Dennoch ist es einen Blick wert, wie Git Umbenennungen handhabt: Git erfasst Umbenennungen nicht extra. Das bedeutet, dass der Aufruf von \texttt{git mv <source> <dest>} zuerst das normale Linux \texttt{mv}-Programm ausf"uhrt, gefolgt von \texttt{git rm} auf das urspr"ungliche File und danch ein \texttt{git add} auf die neu benannte Datei. \texttt{git mv} ist nur ein k"urzerer Weg das zu tun. Es ist eine gute "Ubung das auszuprobieren, um zu verstehen was wirklich passiert. Als "Ubung kannst Du das Repository nach jedem Kommando inspizieren, um festzustellen, ab wann Git Deine Aktionen als Umbenennung registriert.
 
-We have run through a few basic commands in Git.  If you are familiar with version control systems, then possibly the only real difference you will have noticed is that of the staging area.  It really is powerful, and allows you to organise and prepare your commits, so that they are both meaningful and coherent.
+Wir haben nun ein paar essentielle Kommandos von Git kennengelernt. Wenn Du dich bereits mit Versionsverwaltungssystemen besch"aftigt hast, ist der einzige Unterschied, den Du fesgestellt hast, vielleicht die Staging Area. Sie ist sehr m"achtig und erlaubt es Dir, Deine Commits zu organisieren und vorzubereiten, so dass sie aussagekr"aftig und zusammenh"angend sind.
 
-For Tamagoyaki Inc, their plan to implement version control was far too aggressive.  Most of the members of the team had never even used a version control system.  When deciding to implement version control, it is essential to ensure that you are doing it for the right reasons.  Version control is a tool to help you to keep things in order, but remember tools are nothing without process.  It is process that is key to the order.
+F"ur Tamagoyaki Inc war der Plan der Implementation eines VCS zu aggressiv. Die meisten Teammitglieder haben noch nie ein Versionsverwaltungssystem benutzt. Aber wenn man sich entscheidet, ein VCS einzusetzen, ist es sehr wichtig sicherzustellen, dass man dies aus den richtigen Gr"unden tut. Versionskontrolle ist ein Programm um die Dinge im Blick zu behalten, aber Programme helfen nichts ohne einen definierten Prozess. Der Prozess ist der Schl"ussel zur Ordnung.
 
 
 \clearpage
-\section{Summary - John's Notes}
-\subsection{Commands}
+\section{Zusammenfassung - John's Notizen}
+\subsection{Kommandos}
 \begin{itemize}
-\item\texttt{git add} - Add files into the index or staging area
+\item\texttt{git add} - F"ugt Dateien zum Index oder zur Staging Area hinzu
 
-\item\texttt{git commit } - Commit files into the repository, using text editor for commit message
+\item\texttt{git commit } - Committet Dateien ins Repository, benutzt einen Text-Editor f"ur die Commit-Message
 
-\item\texttt{git commit -m '<Message>'} - Commit files into the repository, using the command line to supply commit message
+\item\texttt{git commit -m '<Message>'} - Committet ebenfalls ein File, die Commit-Message wird aber auf der Shell angegeben
 
-\item\texttt{git commit -a} - Commit all tracked files into the repository that have changed, using text editor for commit message
+\item\texttt{git commit -a} - Committet alle erfassten Dateien ins Repository, benutzt einen Text-Editor f"ur die Commit-Message
 
-\item\texttt{git reset <path>} - Remove file from index or staging area
+\item\texttt{git reset <path>} - Entfernt Dateien vom Index oder von der Staging Area
 
-\item\texttt{git status} - Show the status of tracked, changed, untracked files
+\item\texttt{git status} - Zeigt den Status von erfassten, ver"anderten und nicht erfassten Dateien an
 \end{itemize}
 
 \subsection{Terminology}
 \begin{itemize}
-\item\textbf{Branch} - A way of working on the same set of code in parallel without modifications overlapping
+\item\textbf{Branch} - Eine M"oglichkeit gleichzeitig am selben Code zu arbeiten, ohne dass sich die Ver"anderungen "uberlappen
 
-\item\textbf{Commit} - A group of objects and a tree in a Git repository
+\item\textbf{Commit} - Eine Gruppe von Objekten in einem Git-Repository
 \end{itemize}
